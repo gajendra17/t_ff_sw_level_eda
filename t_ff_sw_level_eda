@@ -1,0 +1,63 @@
+//////des//////
+
+// Code your design here
+module invt(in,out);
+  input in;
+  output out;
+  supply0 gnd;
+  supply1 vdd;
+  pmos(out,vdd,in);
+  nmos(out,gnd,in);
+endmodule 
+
+module xor2 (y,a,b);
+  output y;
+  input a,b;
+  supply0 gnd;
+  supply1 vdd;
+  wire w;
+  
+  pmos p1(w,vdd,a);
+  pmos p2(y,a,b);
+  pmos p3(y,b,a);
+  
+  nmos n1(w,gnd,a);
+  nmos n2(y,w,b);
+  nmos n3(y,b,w);
+	
+endmodule
+
+module tff(din,clk,q);
+  input din,clk;
+  output q;
+  wire w0,w1,w2,w3,w4;
+  cmos a0(w0,din,clk,~clk);
+  invt v1(w0,w1);
+  invt v2(w1,w2);
+  cmos a1(w0,w2,~clk,clk);
+  cmos a2(w3,w1,clk,~clk);
+  invt v3(w3,q);
+  invt v4(q,w4);
+  cmos a3(w3,w4,~clk,clk);
+endmodule
+  
+  
+  
+  /////tb/////
+  
+  // Code your testbench here
+// or browse Examples
+module test();
+  reg din,clk;
+  wire q;
+  dff dff_tb(din,clk,q);
+  
+  initial begin
+    din=1'b0;
+    clk=1'b0;
+    #150 $finish;
+  end
+  always #5 clk=~clk;
+  always #8 din=~din;
+ initial $monitor("%b%b%b",clk,din,q);
+endmodule
